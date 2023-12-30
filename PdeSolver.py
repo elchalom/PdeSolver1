@@ -1,4 +1,5 @@
-#If confused, consult README
+#CONSULT README BEFORE MAKING EDITS
+#-------------------------------------------------------------------------------------------------
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -9,18 +10,28 @@ import matplotlib.pyplot as plt
 g=9.80665
 alt = 1400 #Launch Altitude
 
-mfueli=3.547
-mi=15.893877 + mfueli
-tfuel = 3.61
+mfueli=3.547 #Fuel mass at launch
+mi=15.893877 + mfueli #Mass of rocket + mass of fuel
+tfuel = 3.61 #Firing time
 
 launchangle = 2
 
 altmain = 200
 
+#Windspeeds at different altitudes
 ws1, alt1 = 8.9, 1000
 ws2, alt2 = 8.9, 2000
 ws3, alt3 = 8.9, 3000
 ws4, alt4 = 8.9, 4000
+
+#Thrust profile - add or remove stages for different motor profiles
+t1, p1 = 0.20, 2400
+t2, p2 = 1.00, 2500
+t3, p3 = 2.60, 2250
+t4, p4 = 2.80, 2000
+t5, p5 = 3.30, 750
+t6, p6 = 3.61, 150
+
 
 #Aerodynamic Components
 Ddrogue = 2
@@ -93,8 +104,56 @@ for t in time:
     else:
         Areay = Ayairframe
         CDy = CDnose
+        
+    Fdragy = -0.5 * rho * Areay * CDy * vrel**2 * vrely / (vrel + 10**-6) 
+    Fdragx = -0.5 * rho * Areax * CDx * vrel**2 * vrelx / (vrel + 10**-6)
     
-    #Thrust Profile - edit values based on motor
+    
+    #Thrust Profile
+    if t<t1:
+        Fthrust = p1
+    elif t<t2:
+        Fthrust = p2
+    elif t<t3:
+        Fthrust = p3
+    elif t<t4:
+        Fthrust = p4
+    elif t<t5:
+        Fthrust = p5
+    elif t<t6:
+        Fthrust = p6
+    else:
+        Fthrust = 0
+    
+    Fthrustx = -Fthrust * np.sin(np.radians(theta))
+    Fthrusty = Fthrust * np.cos(np.radians(theta))
+    
+    #Mass
+    if t<tfuel:
+        mfuelgone = t*(mfueli/tfuel)
+    else:
+        mfuelgone = mfueli
+        
+    m = mi - mfuelgone
+    
+    #acceleration
+    ax = (Fdragx + Fthrustx) / m
+    ay = (Fthrusty + Fdragy) / m - g
+    
+    axVals.append(ax)
+    ayVals.append(ay)
+        
+    #Update varaibles - displacement updated using prev value of v
+    rx += vx * dt
+    vx += ax * dt
+    ry += vy * dt
+    vy += ay * dt
+    
+    rxVals.append(rx)
+    vxVals.append(vx)
+    ryVals.append(ry)
+    vyVals.append(vy)
     
     
-
+for i in rxVals:
+    print(rxVals[i])
