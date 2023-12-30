@@ -49,11 +49,11 @@ Ayairframe = 0.0135
 
 
 #Time Parameters - smol dt accurate, big dt quicker runtime, edit accordingly
-dt = 0.01
-endtime = 2000
+dt = 0.005
+endtime = 1000
 
 #Initialize Equations
-time = np.arrange(0, endtime, dt) #Vector of time values seperated by dt from 0 until endtime
+time = np.arange(0, endtime, dt) #Vector of time values seperated by dt from 0 until endtime
 
 rxVals, vxVals, axVals = [], [], [] #Blank vectors for values in x
 ryVals, vyVals, ayVals = [], [], [] #Blank vectors for values in y
@@ -154,6 +154,5 @@ for t in time:
     ryVals.append(ry)
     vyVals.append(vy)
     
-    
-for i in rxVals:
-    print(rxVals[i])
+
+print(max(ryVals)-alt)
