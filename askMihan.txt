@@ -1,0 +1,3 @@
+-What do the threshold values do/mean at the top of the FlexPDE script?
+-Is the initial condition for ry the altitude?
+-What is the function of angle delta? is it supposed to assume that ry(0) = 0 or is equating it to altitude correct?
