@@ -43,6 +43,7 @@ CDnose = 0.3082
 def area(d):
     return 3.14*(d/2)**2
 
+#Cross sections of frame
 Areax = 0.347
 CDx = 0.38
 Ayairframe = 0.0135
@@ -154,5 +155,31 @@ for t in time:
     ryVals.append(ry)
     vyVals.append(vy)
     
+#--------------------------------------------------------------
+#Graphs
 
-print(max(ryVals)-alt)
+plt.subplot(2,3,1)
+plt.plot(time, rxVals, label = 'rx')
+plt.title('rx')
+
+
+plt.subplot(2,3,2)
+plt.plot(time, vxVals, label = 'vx')
+plt.title('vx')
+
+plt.subplot(2,3,3)
+plt.plot(time, axVals, label = 'ax')
+plt.title('ax')
+
+plt.subplot(2,3,4)
+plt.plot(time, ryVals, label = 'ry')
+plt.title('ry')
+
+plt.subplot(2,3,5)
+plt.plot(time, vyVals, label = 'vy')
+plt.title('vy')
+
+plt.subplot(2,3,6)
+plt.plot(time, ayVals, label = 'ay')
+plt.title('ay')
+plt.show()

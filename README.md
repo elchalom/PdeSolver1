@@ -1,9 +1,24 @@
 # PdeSolver1
+########################################################################
+                    WORK IN PROGRESS!!!!
+########################################################################
+-x Direction displacement/velocity currently broken
+    -Theta and Delta angles not being properly used
+    -This probably explains why apogee is slightly higher than flexpde
+########################################################################
+
+
+
 Install Python 3 with Numpy and matplotlib
 
 Simulation program for McMaster Rocketry developed by the recovery subteam
 
 All Values are in METRIC SI units
+
+DO NOT RUN AGAIN IF GRAPHS ARE OPEN
+Close graphs and then run again, otherwise problems
+
+If you want to add or modify graphs, learn how to use matplotlib subplot functions first please - chatgpt is good teacher
 
 Current values are for the Maurader 2, edit these parameters if a different rocket is used
     -Thrust profile / fuel firing times
