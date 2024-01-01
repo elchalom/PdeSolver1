@@ -79,7 +79,7 @@ PLOTS { save result displays }
 for t= 0 by endtime/50 to endtime
 history(ry, vy*10, ay*10) at(0)
 Export file="Output.csv"
-history(rx, vx*10, ax*100) at (0)
+history(rx, vx*100, ax*100) at (0)
 history(ry) at (0) vs rx
 history(Fthrustx, Fthrusty) at (0)
 history(rho) at(0)

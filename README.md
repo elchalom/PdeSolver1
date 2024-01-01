@@ -28,7 +28,7 @@ Current values are for the Maurader 2, edit these parameters if a different rock
 
 Current values are for the launchsite in new mexico, edit if a different site wants to be simulated
     -alt (launch altitude)
-    -wind speeds
+    -wind speeds (Use heights FROM LAUNCH altitude if windspeeds change at different altitudes not from sea level)
 
 DO NOT edit the main program loop to change parameter values, all parameters are accessible in global scope
 

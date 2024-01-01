@@ -11,12 +11,13 @@ g=9.80665
 alt = 1400 #Launch Altitude
 
 mfueli=3.547 #Fuel mass at launch
-mi=15.893877 + mfueli #Mass of rocket + mass of fuel
+mrocket = 15.893877 #Mass of rocket without fuel
+mi=mrocket + mfueli #Launch mass
 tfuel = 3.61 #Firing time
 
 launchangle = 2
 
-altmain = 200
+altmain = 200 #Main chute deployment altitude
 
 #Windspeeds at different altitudes
 ws1, alt1 = 8.9, 1000
@@ -49,25 +50,29 @@ CDx = 0.38
 Ayairframe = 0.0135
 
 
-#Time Parameters - smol dt accurate, big dt quicker runtime, edit accordingly
-dt = 0.005
-endtime = 1000
-
 #Initialize Equations
-time = np.arange(0, endtime, dt) #Vector of time values seperated by dt from 0 until endtime
+time = [0]
 
 rxVals, vxVals, axVals = [], [], [] #Blank vectors for values in x
 ryVals, vyVals, ayVals = [], [], [] #Blank vectors for values in y
+rhoVals, thetaVals = [], [] #Blank vectors for rho and theta
 
 
 #Initial conditions
-rx, vx = 0, 0.01
-ry, vy = alt, 0.01
+rx, vx = 0, 0.001
+ry, vy = 0.001, 0.001
 m = mi
+i = 0
+
+
+#Time Parameter - smol dt accurate, big dt quicker runtime, edit accordingly
+dt = 0.001
 
 
 #Main Simulation Loop
-for t in time:
+while ry > 0:
+    t = time[i]
+    
     delta = (ry**2) / 90000
     
     if vy > 0:
@@ -75,6 +80,7 @@ for t in time:
     else:
         theta = 0
     
+    #Windspeeds
     if 0 < ry < alt1:
         vrelx = vx - ws1
     elif alt1 < ry < alt2:
@@ -88,7 +94,7 @@ for t in time:
         
     vrely = vy
     
-    vrel = np.sqrt(vrelx**2 + vrelx**2)
+    vrel = np.sqrt(vrely**2 + vrelx**2)
     
     #Aerodynamics
     rho = (-((ry + alt) / 1000-44.3308)/42.2665)**(7418/1743) #idek
@@ -97,14 +103,14 @@ for t in time:
         Areay = Ayairframe
         CDy = CDnose
     elif vy<0 and ry > altmain:
-        Areay = area(Dmain)
-        CDy = CDmain
-    elif vy<0 and ry < altmain:
         Areay = area(Ddrogue)
         CDy = CDdrogue
-    else:
-        Areay = Ayairframe
-        CDy = CDnose
+    elif vy<0 and ry < altmain:
+        Areay = area(Dmain)
+        CDy = CDmain
+    # else:
+    #     Areay = Ayairframe
+    #     CDy = CDnose
         
     Fdragy = -0.5 * rho * Areay * CDy * vrel**2 * vrely / (vrel + 10**-6) 
     Fdragx = -0.5 * rho * Areax * CDx * vrel**2 * vrelx / (vrel + 10**-6)
@@ -126,8 +132,8 @@ for t in time:
     else:
         Fthrust = 0
     
-    Fthrustx = -Fthrust * np.sin(np.radians(theta))
-    Fthrusty = Fthrust * np.cos(np.radians(theta))
+    Fthrustx = -Fthrust * np.sin(theta*0.01745)
+    Fthrusty = Fthrust * np.cos(theta*0.01745)
     
     #Mass
     if t<tfuel:
@@ -150,36 +156,59 @@ for t in time:
     ry += vy * dt
     vy += ay * dt
     
+    
     rxVals.append(rx)
     vxVals.append(vx)
     ryVals.append(ry)
     vyVals.append(vy)
+    rhoVals.append(rho)
+    thetaVals.append(theta)
+    
+    if(ry>0):
+        time.append(t+dt)
+        i+=1
+        
+    if (time[i] > 2000):
+        break
+    
     
 #--------------------------------------------------------------
 #Graphs
 
-plt.subplot(2,3,1)
+plt.subplot(2,4,1)
 plt.plot(time, rxVals, label = 'rx')
 plt.title('rx')
 
 
-plt.subplot(2,3,2)
+plt.subplot(2,4,2)
 plt.plot(time, vxVals, label = 'vx')
 plt.title('vx')
 
-plt.subplot(2,3,3)
+plt.subplot(2,4,3)
 plt.plot(time, axVals, label = 'ax')
 plt.title('ax')
 
-plt.subplot(2,3,4)
+plt.subplot(2,4,4)
+plt.plot(time,rhoVals, label = 'rho')
+plt.title('rho')
+
+plt.subplot(2,4,5)
 plt.plot(time, ryVals, label = 'ry')
 plt.title('ry')
 
-plt.subplot(2,3,5)
+plt.subplot(2,4,6)
 plt.plot(time, vyVals, label = 'vy')
 plt.title('vy')
 
-plt.subplot(2,3,6)
+plt.subplot(2,4,7)
 plt.plot(time, ayVals, label = 'ay')
 plt.title('ay')
+
+plt.subplot(2,4,8)
+plt.plot(time, thetaVals, label = 'theta')
+plt.title('theta')
+
+
+print(max(ryVals))
+
 plt.show()
