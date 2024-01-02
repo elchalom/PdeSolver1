@@ -35,9 +35,9 @@ t6, p6 = 3.61, 150
 
 
 #Aerodynamic Components
-Ddrogue = 2
+Ddrogue = 0.6096
 CDdrogue = 0.97
-Dmain = 12
+Dmain = 3.6576
 CDmain = 0.97
 CDnose = 0.3082
 
@@ -66,7 +66,7 @@ i = 0
 
 
 #Time Parameter - smol dt accurate, big dt quicker runtime, edit accordingly
-dt = 0.001
+dt = 0.0005
 
 
 #Main Simulation Loop
@@ -87,7 +87,7 @@ while ry > 0:
         vrelx = vx - ws2
     elif alt2 < ry < alt3:
         vrelx = vx - ws3
-    elif alt3 < vx < alt4:
+    elif alt3 < ry < alt4:
         vrelx = vx - ws4
     else:
         vrelx = vx
@@ -132,8 +132,8 @@ while ry > 0:
     else:
         Fthrust = 0
     
-    Fthrustx = -Fthrust * np.sin(theta*0.01745)
-    Fthrusty = Fthrust * np.cos(theta*0.01745)
+    Fthrustx = -Fthrust * np.sin(np.radians(theta))
+    Fthrusty = Fthrust * np.cos(np.radians(theta))
     
     #Mass
     if t<tfuel:
@@ -145,7 +145,7 @@ while ry > 0:
     
     #acceleration
     ax = (Fdragx + Fthrustx) / m
-    ay = (Fthrusty + Fdragy) / m - g
+    ay = (Fdragy + Fthrusty) / m - g
     
     axVals.append(ax)
     ayVals.append(ay)
@@ -167,7 +167,8 @@ while ry > 0:
     if(ry>0):
         time.append(t+dt)
         i+=1
-        
+    
+    #Break condition - incase changed parameters cause inf loop    
     if (time[i] > 2000):
         break
     
