@@ -1,14 +1,4 @@
 # PdeSolver1
-########################################################################
-                    WORK IN PROGRESS!!!!
-########################################################################
--x Direction displacement/velocity currently broken
-    -Theta and Delta angles not being properly used
-    -This probably explains why apogee is slightly higher than flexpde
-########################################################################
-
-
-
 Install Python 3 with Numpy and matplotlib
 
 Simulation program for McMaster Rocketry developed by the recovery subteam
