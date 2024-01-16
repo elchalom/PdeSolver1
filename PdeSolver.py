@@ -1,6 +1,10 @@
 #CONSULT README BEFORE MAKING EDITS
 #-------------------------------------------------------------------------------------------------
 
+#TODO make changes so that default launch profiles can be saved to files and the program pulls data from those files instead.
+#TODO add user interface to modify initial parameters.
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 
