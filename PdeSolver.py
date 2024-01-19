@@ -2,6 +2,7 @@
 #-------------------------------------------------------------------------------------------------
 
 #TODO make changes so that default launch profiles can be saved to files and the program pulls data from those files instead. 
+#TODO break program down into seperate functions, global scope variables should be accessible only from datafiles
 #TODO add motor JSON file to smooth the curve.
 #TODO add user interface to modify initial parameters.
 
