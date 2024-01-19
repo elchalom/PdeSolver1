@@ -1,7 +1,8 @@
 #CONSULT README BEFORE MAKING EDITS
 #-------------------------------------------------------------------------------------------------
 
-#TODO make changes so that default launch profiles can be saved to files and the program pulls data from those files instead.
+#TODO make changes so that default launch profiles can be saved to files and the program pulls data from those files instead. 
+#TODO add motor JSON file to smooth the curve.
 #TODO add user interface to modify initial parameters.
 
 
