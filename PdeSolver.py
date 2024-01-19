@@ -68,154 +68,160 @@ rhoVals, thetaVals = [], [] #Blank vectors for rho and theta
 rx, vx = 0, 0.001
 ry, vy = 0.001, 0.001
 m = mi
-i = 0
 
-
-#Time Parameter - smol dt accurate, big dt quicker runtime, edit accordingly
-dt = 0.0005
 
 
 #Main Simulation Loop
-while ry > 0:
-    t = time[i]
-    
-    delta = (ry**2) / 90000
-    
-    if vy > 0:
-        theta = launchangle + delta
-    else:
-        theta = 0
-    
-    #Windspeeds
-    if 0 < ry < alt1:
-        vrelx = vx - ws1
-    elif alt1 < ry < alt2:
-        vrelx = vx - ws2
-    elif alt2 < ry < alt3:
-        vrelx = vx - ws3
-    elif alt3 < ry < alt4:
-        vrelx = vx - ws4
-    else:
-        vrelx = vx
+
+def main(rx, vx, ry, vy):
+    dt = 0.001 # time interval where values are recalculated
+    i = 0
+    while ry > 0:
         
-    vrely = vy
-    
-    vrel = np.sqrt(vrely**2 + vrelx**2)
-    
-    #Aerodynamics
-    rho = (-((ry + alt) / 1000-44.3308)/42.2665)**(7418/1743) #idek
-    
-    if vy > 0:
-        Areay = Ayairframe
-        CDy = CDnose
-    elif vy<0 and ry > altmain:
-        Areay = area(Ddrogue)
-        CDy = CDdrogue
-    elif vy<0 and ry < altmain:
-        Areay = area(Dmain)
-        CDy = CDmain
-    # else:
-    #     Areay = Ayairframe
-    #     CDy = CDnose
+        t = time[i]
         
-    Fdragy = -0.5 * rho * Areay * CDy * vrel**2 * vrely / (vrel + 10**-6) 
-    Fdragx = -0.5 * rho * Areax * CDx * vrel**2 * vrelx / (vrel + 10**-6)
-    
-    
-    #Thrust Profile
-    if t<t1:
-        Fthrust = p1
-    elif t<t2:
-        Fthrust = p2
-    elif t<t3:
-        Fthrust = p3
-    elif t<t4:
-        Fthrust = p4
-    elif t<t5:
-        Fthrust = p5
-    elif t<t6:
-        Fthrust = p6
-    else:
-        Fthrust = 0
-    
-    Fthrustx = -Fthrust * np.sin(np.radians(theta))
-    Fthrusty = Fthrust * np.cos(np.radians(theta))
-    
-    #Mass
-    if t<tfuel:
-        mfuelgone = t*(mfueli/tfuel)
-    else:
-        mfuelgone = mfueli
+        delta = (ry**2) / 90000
         
-    m = mi - mfuelgone
-    
-    #acceleration
-    ax = (Fdragx + Fthrustx) / m
-    ay = (Fdragy + Fthrusty) / m - g
-    
-    axVals.append(ax)
-    ayVals.append(ay)
+        if vy > 0:
+            theta = launchangle + delta
+        else:
+            theta = 0
         
-    #Update varaibles - displacement updated using prev value of v
-    rx += vx * dt
-    vx += ax * dt
-    ry += vy * dt
-    vy += ay * dt
+        #Windspeeds
+        if 0 < ry < alt1:
+            vrelx = vx - ws1
+        elif alt1 < ry < alt2:
+            vrelx = vx - ws2
+        elif alt2 < ry < alt3:
+            vrelx = vx - ws3
+        elif alt3 < ry < alt4:
+            vrelx = vx - ws4
+        else:
+            vrelx = vx
+            
+        vrely = vy
+        
+        vrel = np.sqrt(vrely**2 + vrelx**2)
+        
+        #Aerodynamics
+        rho = (-((ry + alt) / 1000-44.3308)/42.2665)**(7418/1743) #idek
+        
+        if vy > 0:
+            Areay = Ayairframe
+            CDy = CDnose
+        elif vy<0 and ry > altmain:
+            Areay = area(Ddrogue)
+            CDy = CDdrogue
+        elif vy<0 and ry < altmain:
+            Areay = area(Dmain)
+            CDy = CDmain
+        # else:
+        #     Areay = Ayairframe
+        #     CDy = CDnose
+            
+        Fdragy = -0.5 * rho * Areay * CDy * vrel**2 * vrely / (vrel + 10**-6) 
+        Fdragx = -0.5 * rho * Areax * CDx * vrel**2 * vrelx / (vrel + 10**-6)
+        
+        
+        #Thrust Profile
+        if t<t1:
+            Fthrust = p1
+        elif t<t2:
+            Fthrust = p2
+        elif t<t3:
+            Fthrust = p3
+        elif t<t4:
+            Fthrust = p4
+        elif t<t5:
+            Fthrust = p5
+        elif t<t6:
+            Fthrust = p6
+        else:
+            Fthrust = 0
+        
+        Fthrustx = -Fthrust * np.sin(np.radians(theta))
+        Fthrusty = Fthrust * np.cos(np.radians(theta))
+        
+        #Mass
+        if t<tfuel:
+            mfuelgone = t*(mfueli/tfuel)
+        else:
+            mfuelgone = mfueli
+            
+        m = mi - mfuelgone
+        
+        #acceleration
+        ax = (Fdragx + Fthrustx) / m
+        ay = (Fdragy + Fthrusty) / m - g
+        
+        axVals.append(ax)
+        ayVals.append(ay)
+            
+        #Update varaibles - displacement updated using prev value of v
+        rx += vx * dt
+        vx += ax * dt
+        ry += vy * dt
+        vy += ay * dt
+        
+        
+        rxVals.append(rx)
+        vxVals.append(vx)
+        ryVals.append(ry)
+        vyVals.append(vy)
+        rhoVals.append(rho)
+        thetaVals.append(theta)
+        
+        if(ry>0):
+            time.append(t+dt)
+            i+=1
+        
+        #Break condition - incase changed parameters cause inf loop    
+        if (time[i] > 2000):
+            break
+        
+    print("Apogee: " + str(max(ryVals)))
     
-    
-    rxVals.append(rx)
-    vxVals.append(vx)
-    ryVals.append(ry)
-    vyVals.append(vy)
-    rhoVals.append(rho)
-    thetaVals.append(theta)
-    
-    if(ry>0):
-        time.append(t+dt)
-        i+=1
-    
-    #Break condition - incase changed parameters cause inf loop    
-    if (time[i] > 2000):
-        break
-    
+    graphs()
+        
     
 #--------------------------------------------------------------
 #Graphs
 
-plt.subplot(2,4,1)
-plt.plot(time, rxVals, label = 'rx')
-plt.title('rx')
+def graphs():
+
+    plt.subplot(2,4,1)
+    plt.plot(time, rxVals, label = 'rx')
+    plt.title('rx')
 
 
-plt.subplot(2,4,2)
-plt.plot(time, vxVals, label = 'vx')
-plt.title('vx')
+    plt.subplot(2,4,2)
+    plt.plot(time, vxVals, label = 'vx')
+    plt.title('vx')
 
-plt.subplot(2,4,3)
-plt.plot(time, axVals, label = 'ax')
-plt.title('ax')
+    plt.subplot(2,4,3)
+    plt.plot(time, axVals, label = 'ax')
+    plt.title('ax')
 
-plt.subplot(2,4,4)
-plt.plot(time,rhoVals, label = 'rho')
-plt.title('rho')
+    plt.subplot(2,4,4)
+    plt.plot(time,rhoVals, label = 'rho')
+    plt.title('rho')
 
-plt.subplot(2,4,5)
-plt.plot(time, ryVals, label = 'ry')
-plt.title('ry')
+    plt.subplot(2,4,5)
+    plt.plot(time, ryVals, label = 'ry')
+    plt.title('ry')
 
-plt.subplot(2,4,6)
-plt.plot(time, vyVals, label = 'vy')
-plt.title('vy')
+    plt.subplot(2,4,6)
+    plt.plot(time, vyVals, label = 'vy')
+    plt.title('vy')
 
-plt.subplot(2,4,7)
-plt.plot(time, ayVals, label = 'ay')
-plt.title('ay')
+    plt.subplot(2,4,7)
+    plt.plot(time, ayVals, label = 'ay')
+    plt.title('ay')
 
-plt.subplot(2,4,8)
-plt.plot(time, thetaVals, label = 'theta')
-plt.title('theta')
+    plt.subplot(2,4,8)
+    plt.plot(time, thetaVals, label = 'theta')
+    plt.title('theta')
 
+    plt.show()
 
-print(max(ryVals))
-
-plt.show()
+main(rx, vx, ry, vy)
