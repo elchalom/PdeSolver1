@@ -47,8 +47,6 @@ Dmain = 3.6576
 CDmain = 0.97
 CDnose = 0.3082
 
-def area(d):
-    return 3.14*(d/2)**2
 
 #Cross sections of frame
 Areax = 0.347
@@ -69,6 +67,8 @@ rx, vx = 0, 0.001
 ry, vy = 0.001, 0.001
 m = mi
 
+def area(d):
+    return 3.14*(d/2)**2
 
 
 #Main Simulation Loop
