@@ -138,6 +138,8 @@ def main(rx, vx, ry, vy):
             Fthrust = p6
         else:
             Fthrust = 0
+            
+        #extract
         
         Fthrustx = -Fthrust * np.sin(np.radians(theta))
         Fthrusty = Fthrust * np.cos(np.radians(theta))
