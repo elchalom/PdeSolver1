@@ -9,6 +9,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
 #Global Constants
@@ -23,7 +24,7 @@ tfuel = 3.61 #Firing time
 
 launchangle = 2
 
-altmain = 200 #Main chute deployment altitude
+altmain = 100 #Main chute deployment altitude
 
 #Windspeeds at different altitudes
 ws1, alt1 = 8.9, 1000
