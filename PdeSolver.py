@@ -19,7 +19,6 @@ alt = 1400 #Launch Altitude
 mfueli=4.835 #Fuel mass at launch
 mrocket = 12.973 #Mass of rocket without fuel
 mi=mrocket + mfueli #Launch mass
-tfuel = 3.61 #Firing time
 
 launchangle = 2
 
@@ -43,6 +42,7 @@ thrust_data = [
     (5.028, 643.799), (5.231, 184.697), (5.303, 68.602), (5.396, 0)
 ]
 
+tfuel = thrust_data[-1][0] #Firing time
 
 #Aerodynamic Components
 Ddrogue = 0.914
