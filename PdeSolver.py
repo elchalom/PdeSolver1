@@ -16,8 +16,8 @@ import matplotlib.pyplot as plt
 g=9.80665
 alt = 1400 #Launch Altitude
 
-mfueli=3.547 #Fuel mass at launch
-mrocket = 15.893877 #Mass of rocket without fuel
+mfueli=4.835 #Fuel mass at launch
+mrocket = 12.973 #Mass of rocket without fuel
 mi=mrocket + mfueli #Launch mass
 tfuel = 3.61 #Firing time
 
@@ -31,25 +31,29 @@ ws2, alt2 = 8.9, 2000
 ws3, alt3 = 8.9, 3000
 ws4, alt4 = 8.9, 4000
 
-#Thrust profile - add or remove stages for different motor profiles
-t1, p1 = 0.20, 2400
-t2, p2 = 1.00, 2500
-t3, p3 = 2.60, 2250
-t4, p4 = 2.80, 2000
-t5, p5 = 3.30, 750
-t6, p6 = 3.61, 150
+#Thrust profile - (time (s), thrust (N))
+thrust_data = [
+    (0.038, 1517.15), (0.063, 1076.517), (0.068, 1282.322), (0.076, 1509.235), 
+    (0.144, 1741.425), (0.207, 1765.172), (0.334, 1749.34), (0.537, 1791.557), 
+    (0.753, 1794.195), (1.053, 1775.726), (1.383, 1788.918), (1.704, 1820.58), 
+    (1.856, 1828.496), (2.013, 1799.472), (2.601, 1686.016), (2.905, 1641.161), 
+    (3.188, 1617.414), (3.472, 1598.945), (3.738, 1583.113), (3.958, 1564.644), 
+    (4.14, 1543.536), (4.216, 1543.536), (4.33, 1482.85), (4.453, 1358.839), 
+    (4.55, 1187.335), (4.723, 1052.77), (4.876, 891.821), (4.969, 783.641), 
+    (5.028, 643.799), (5.231, 184.697), (5.303, 68.602), (5.396, 0)
+]
 
 
 #Aerodynamic Components
-Ddrogue = 0.6096
+Ddrogue = 0.914
 CDdrogue = 0.97
-Dmain = 3.6576
+Dmain = 4.267
 CDmain = 0.97
 CDnose = 0.3082
 
 
 #Cross sections of frame
-Areax = 0.347
+Areax = 0.499
 CDx = 0.38
 Ayairframe = 0.0135
 
@@ -63,8 +67,8 @@ rhoVals, thetaVals = [], [] #Blank vectors for rho and theta
 
 
 #Initial conditions
-rx, vx = 0, 0.001
-ry, vy = 0.001, 0.001
+rx, vx = 0, 0.00001
+ry, vy = 0.00001, 0.00001
 m = mi
 
 def area(d):
@@ -76,7 +80,7 @@ def area(d):
 def main(rx, vx, ry, vy):
     dt = 0.001 # time interval where values are recalculated
     i = 0
-    while ry > 0:
+    while True:
         
         t = time[i]
         
@@ -124,20 +128,11 @@ def main(rx, vx, ry, vy):
         
         
         #Thrust Profile
-        if t<t1:
-            Fthrust = p1
-        elif t<t2:
-            Fthrust = p2
-        elif t<t3:
-            Fthrust = p3
-        elif t<t4:
-            Fthrust = p4
-        elif t<t5:
-            Fthrust = p5
-        elif t<t6:
-            Fthrust = p6
-        else:
-            Fthrust = 0
+        Fthrust = 0
+        for j in range(len(thrust_data) - 1):
+            if thrust_data[j][0] <= t and t < thrust_data[j + 1][0]:
+                Fthrust = thrust_data[j][1]
+                break
             
         #extract
         
@@ -173,9 +168,11 @@ def main(rx, vx, ry, vy):
         rhoVals.append(rho)
         thetaVals.append(theta)
         
-        if(ry>0):
+        if(ry>0 or t<1):
             time.append(t+dt)
             i+=1
+        else:
+            break
         
         #Break condition - incase changed parameters cause inf loop    
         if (time[i] > 2000):
