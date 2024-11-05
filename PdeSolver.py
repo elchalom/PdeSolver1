@@ -1,3 +1,5 @@
+# This is a test
+
 #CONSULT README BEFORE MAKING EDITS
 #-------------------------------------------------------------------------------------------------
 
@@ -78,16 +80,17 @@ def area(d):
 #Main Simulation Loop
 
 def main(rx, vx, ry, vy):
-    dt = 0.001 # time interval where values are recalculated
+    dt = 0.0001 # time interval where values are recalculated
     i = 0
     while True:
         
         t = time[i]
         
-        delta = (ry**2) / 90000
+        #delta = (ry**2) / 90000
         
         if vy > 0:
-            theta = launchangle + delta
+            theta = launchangle
+            # theta = launchangle + delta
         else:
             theta = 0
         
@@ -123,6 +126,7 @@ def main(rx, vx, ry, vy):
         #     Areay = Ayairframe
         #     CDy = CDnose
             
+        # TODO Incorporate friction along the sides of the friction    
         Fdragy = -0.5 * rho * Areay * CDy * vrel**2 * vrely / (vrel + 10**-6) 
         Fdragx = -0.5 * rho * Areax * CDx * vrel**2 * vrelx / (vrel + 10**-6)
         
@@ -140,6 +144,7 @@ def main(rx, vx, ry, vy):
         Fthrusty = Fthrust * np.cos(np.radians(theta))
         
         #Mass
+        # TODO Incorporate thrust curve to calculate fuel burn to be nonlinear
         if t<tfuel:
             mfuelgone = t*(mfueli/tfuel)
         else:
